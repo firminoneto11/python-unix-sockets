@@ -2,7 +2,7 @@ import asyncio
 
 LIMIT: int = asyncio.streams._DEFAULT_LIMIT
 MARKER = "_;;;"
-SOCKET_PATH = "./server.sock"
+SOCKET_PATH = "./sockets/server.sock"
 
 
 async def read_data(reader: asyncio.StreamReader) -> str:

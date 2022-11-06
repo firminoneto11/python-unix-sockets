@@ -3,3 +3,7 @@ venv/
 .idea/
 __pycache__/
 sockets/
+.gitignore
+.dockerignore
+*.Dockerfile
+*.md

@@ -21,6 +21,11 @@ async def handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
 async def main():
     server = await asyncio.start_unix_server(handler, SOCKET_PATH)
 
+    # asyncio.unix_events._UnixSelectorEventLoop
+
+    loop = asyncio.get_running_loop()
+    print(type(loop))
+
     addrs = ", ".join(str(sock.getsockname()) for sock in server.sockets)
     print(f"Serving on {addrs}")
 

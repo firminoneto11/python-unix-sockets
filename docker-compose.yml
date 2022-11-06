@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    volumes:
+      - ./sockets:/app/sockets
+  client:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    volumes:
+      - ./sockets:/app/sockets
+    depends_on:
+      - server
