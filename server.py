@@ -3,32 +3,29 @@ import asyncio
 from utils import read_data, send_data, SOCKET_PATH
 
 
-async def handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+async def request_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+    # print(writer._transport._extra)  # This contains every information about the sender
+    # address = writer.get_extra_info("peername")  # Use this if you want just some keys of sender's information
+
     message = await read_data(reader=reader)
-    addr = writer.get_extra_info("peername")
+    print(f"-> Received {message!r}")
 
-    print(f"-> Received {message!r} from {addr!r}")
+    # Do optional logic here with the received data
 
-    # Do optional logic here
-
-    print(f"-> Sending response...")
     await send_data(writer=writer, message="OK")
+    print(f"-> Response sended")
 
-    print("-> Closing the connection")
     writer.close()
+    print("-> Closing the connection")
 
 
-async def main():
-    server = await asyncio.start_unix_server(handler, SOCKET_PATH)
+async def serve() -> None:
+    # asyncio.unix_events._UnixSelectorEventLoop  # Base Unix event loop type
+    # addresses = ", ".join(str(sock.getsockname()) for sock in server.sockets)
+    # print(f"Serving on {addresses}")  # -> Use this to display where the socket is being served when using IP sockets
 
-    # asyncio.unix_events._UnixSelectorEventLoop
-
-    loop = asyncio.get_running_loop()
-    print(type(loop))
-
-    addrs = ", ".join(str(sock.getsockname()) for sock in server.sockets)
-    print(f"Serving on {addrs}")
-
+    server = await asyncio.start_unix_server(request_handler, SOCKET_PATH)
+    print(f"Serving on this socket: {SOCKET_PATH!r}")
     try:
         await server.serve_forever()
     except:
@@ -36,4 +33,4 @@ async def main():
         await server.wait_closed()
 
 
-asyncio.run(main())
+asyncio.run(serve())

@@ -1,7 +1,7 @@
 import asyncio
 
 LIMIT: int = asyncio.streams._DEFAULT_LIMIT
-MARKER = "_;;;"
+MARKER = "__;;;__"
 SOCKET_PATH = "./sockets/server.sock"
 
 
