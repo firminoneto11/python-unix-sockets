@@ -8,7 +8,7 @@ async def request_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWr
     # address = writer.get_extra_info("peername")  # Use this if you want just some keys of sender's information
 
     message = await read_data(reader=reader)
-    print(f"-> Received {message!r}")
+    print(f"-> Received {message!r} from client")
 
     # Do optional logic here with the received data
 
@@ -16,7 +16,8 @@ async def request_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWr
     print(f"-> Response sended")
 
     writer.close()
-    print("-> Closing the connection")
+    await writer.wait_closed()
+    print("-> Connection closed")
 
 
 async def serve() -> None:
