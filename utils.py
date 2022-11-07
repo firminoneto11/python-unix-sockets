@@ -1,25 +1,19 @@
 import asyncio
 
-LIMIT: int = asyncio.streams._DEFAULT_LIMIT
-MARKER = "__;;;__"
 SOCKET_PATH = "./sockets/server.sock"
+ENCODING = "utf-8"
 
 
 async def read_data(reader: asyncio.StreamReader) -> str:
-    blocks = []
-    while 1:
-        block = await reader.read(LIMIT)
-        if block:
-            message = block.decode()
-            blocks.append(message)
-            if MARKER in message:
-                break
-        break
-
-    return "".join(blocks).replace(MARKER, "")
+    return (await reader.read()).decode(ENCODING)
 
 
 async def send_data(writer: asyncio.StreamWriter, message: str) -> None:
-    final = message + MARKER
-    writer.write(final.encode("utf-8"))
+    writer.write(message.encode(ENCODING))
+    writer.write_eof()
     await writer.drain()
+
+
+async def close_writer(writer: asyncio.StreamWriter) -> None:
+    writer.close()
+    await writer.wait_closed()

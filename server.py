@@ -1,6 +1,6 @@
 import asyncio
 
-from utils import read_data, send_data, SOCKET_PATH
+from utils import SOCKET_PATH, read_data, send_data, close_writer
 
 
 async def request_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -15,8 +15,7 @@ async def request_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWr
     await send_data(writer=writer, message="OK")
     print(f"-> Response sended")
 
-    writer.close()
-    await writer.wait_closed()
+    await close_writer(writer=writer)
     print("-> Connection closed")
 
 
